@@ -16,6 +16,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@kubernetes/client-node": "^0.16.2",
     "@sveltejs/adapter-node": "next",
     "bulmaswatch": "^0.8.1",
     "cookie": "^0.4.1"

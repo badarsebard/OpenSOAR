@@ -22,4 +22,4 @@ deploy:
     - src/k8s.yaml
     - src/webserver/backend/k8s.yaml
     - src/webserver/frontend/k8s.yaml
-#    - src/argo/argo.yaml
+    - src/argo/argo.yaml

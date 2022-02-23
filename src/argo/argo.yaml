@@ -2,6 +2,7 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: clusterworkflowtemplates.argoproj.io
 spec:
   group: argoproj.io
@@ -39,6 +40,7 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: cronworkflows.argoproj.io
 spec:
   group: argoproj.io
@@ -80,6 +82,7 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: workfloweventbindings.argoproj.io
 spec:
   group: argoproj.io
@@ -116,6 +119,7 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: workflows.argoproj.io
 spec:
   group: argoproj.io
@@ -167,6 +171,7 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: workflowtasksets.argoproj.io
 spec:
   group: argoproj.io
@@ -207,6 +212,7 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  namespace: argo
   name: workflowtemplates.argoproj.io
 spec:
   group: argoproj.io
@@ -243,16 +249,19 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  namespace: argo
   name: argo
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  namespace: argo
   name: argo-server
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  namespace: argo
   name: argo-role
 rules:
 - apiGroups:
@@ -273,6 +282,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: argo
   labels:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: argo-aggregate-to-admin
@@ -305,6 +315,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: argo
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
   name: argo-aggregate-to-edit
@@ -335,6 +346,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: argo
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
   name: argo-aggregate-to-view
@@ -360,6 +372,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: argo
   name: argo-cluster-role
 rules:
 - apiGroups:
@@ -455,6 +468,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: argo
   name: argo-server-cluster-role
 rules:
 - apiGroups:
@@ -520,6 +534,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
+  namespace: argo
   name: argo-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -532,6 +547,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  namespace: argo
   name: argo-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -545,6 +561,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  namespace: argo
   name: argo-server-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -558,11 +575,13 @@ subjects:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: argo
   name: workflow-controller-configmap
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: argo
   name: argo-server
 spec:
   ports:
@@ -575,6 +594,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: argo
   labels:
     app: workflow-controller
   name: workflow-controller-metrics
@@ -590,6 +610,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: argo
   name: argo-server
 spec:
   selector:
@@ -603,6 +624,9 @@ spec:
       containers:
       - args:
         - server
+        env:
+          - name: BASE_HREF
+            value: /argo/
         image: quay.io/argoproj/argocli:v3.2.6
         name: argo-server
         ports:
@@ -634,6 +658,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: argo
   name: workflow-controller
 spec:
   selector:

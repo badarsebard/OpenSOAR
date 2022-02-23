@@ -37,6 +37,10 @@
                     Incidents
                 </a>
                 {#if $session.user.is_superuser}
+                    <a class="navbar-item" href="/argo" rel="external" target="_blank">
+                        Argo
+                        <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
                     <a class="navbar-item" href="/settings">
                         Settings
                     </a>
