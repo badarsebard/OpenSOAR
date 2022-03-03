@@ -3,7 +3,7 @@ import asyncio
 from fastapi import FastAPI, Request
 from sqlalchemy.orm import Session
 
-from .crud import get_incidents
+from crud.incidents import get_incidents
 
 incident_stream_delay = 5  # second
 incident_stream_retry_timeout = 30000  # millisecond
@@ -26,7 +26,8 @@ async def incident_event_generator(db: Session, request: Request):
 
 
 class OSoarApp(FastAPI):
-    def __init__(self, engine=None, session_maker=None, *args, **kwargs):
+    def __init__(self, engine=None, session_maker=None, users=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.engine = engine
         self.session_maker = session_maker
+        self.users = users
