@@ -93,9 +93,7 @@
                 <th><input type="checkbox" id="allSelector" on:click={toggleSelectAll}></th>
                 <th>ID</th>
                 <th>Owner</th>
-                <th>Status</th>
-                <th>Title</th>
-                <th>Description</th>
+                <th>Data</th>
             </tr>
             </thead>
             <tbody>
@@ -106,9 +104,7 @@
                                    bind:group={selection}></td>
                         <td>{incident.id}</td>
                         <td>{incident.owner.display_name ? incident.owner.display_name : incident.owner.email}</td>
-                        <td>{incident.status}</td>
-                        <td>{incident.title}</td>
-                        <td>{incident.description}</td>
+                        <td>{incident.data}</td>
                     </tr>
                 {/each}
             {/if}

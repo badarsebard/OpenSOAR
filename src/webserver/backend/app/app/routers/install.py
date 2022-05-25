@@ -1,3 +1,4 @@
+"""Router for installation endpoints"""
 import os
 import signal
 import sys
@@ -18,6 +19,7 @@ from sqlalchemy.orm import Session
 from .. import schemas, crud, adapter
 from ..utils import OSoarApp
 from ..database import Base
+from .incidents import get_incidents_router
 
 secret = os.environ.get("AUTH_BACKEND_SECRET")
 if not secret:
@@ -26,6 +28,7 @@ bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
+    """Return json web token strategy"""
     return JWTStrategy(secret=secret, lifetime_seconds=3600)
 
 
@@ -37,12 +40,16 @@ auth_backend = AuthenticationBackend(
 
 
 class UserManager(BaseUserManager[schemas.UserCreate, schemas.UserDB]):
+    """Fastapi Users user manager"""
+
     user_db_model = schemas.UserDB
     reset_password_token_secret = secret
     verification_token_secret = secret
 
 
 def install_routes(app: OSoarApp, get_db):
+    """Install routers to the app"""
+
     def get_user_db():
         yield adapter.SQLAlchemyORMUserDatabase(
             schemas.UserDB,
@@ -50,7 +57,7 @@ def install_routes(app: OSoarApp, get_db):
         )
 
     async def get_user_manager(
-            user_db: adapter.SQLAlchemyORMUserDatabase = Depends(get_user_db),
+        user_db: adapter.SQLAlchemyORMUserDatabase = Depends(get_user_db),
     ):
         yield UserManager(user_db)
 
@@ -62,6 +69,8 @@ def install_routes(app: OSoarApp, get_db):
         schemas.UserUpdate,
         schemas.UserDB,
     )
+
+    app.users = fastapi_users
 
     app.include_router(
         fastapi_users.get_auth_router(auth_backend),
@@ -75,17 +84,22 @@ def install_routes(app: OSoarApp, get_db):
         fastapi_users.get_users_router(),
         prefix="/users",
     )
+    app.include_router(get_incidents_router(app))
 
     def read_users(
-            s: Session = Depends(get_db),
-            # user: schemas.User = Depends(fastapi_users.current_user(active=True)),
+        session: Session = Depends(get_db),
     ):
-        return crud.read_users(s)
+        return crud.read_users(session)
 
-    app.add_api_route("/users", read_users)
+    app.add_api_route(
+        "/users",
+        read_users,
+        dependencies=[Depends(fastapi_users.current_user(active=True))],
+    )
 
 
 def get_install_router(app: OSoarApp):
+    """Router for the /install endpoints"""
     local_session_maker, engine = app.session_maker, app.engine
 
     router = APIRouter()
@@ -102,18 +116,20 @@ def get_install_router(app: OSoarApp):
         # create initial tables
         Base.metadata.create_all(engine)
 
-        db = local_session_maker()
+        db_conn = local_session_maker()
         installed = None
         inspector: Inspector = inspect(engine)
         if inspector.has_table("settings"):
-            installed = crud.get_setting(db, "installed")
+            installed = crud.get_setting(db_conn, "installed")
         if not installed or installed.value != "True":
             # create initial user
             try:
-                user_manager = UserManager(adapter.SQLAlchemyORMUserDatabase(
-                    schemas.UserDB,
-                    app.session_maker(),
-                ))
+                user_manager = UserManager(
+                    adapter.SQLAlchemyORMUserDatabase(
+                        schemas.UserDB,
+                        app.session_maker(),
+                    )
+                )
                 await user_manager.create(root_user, safe=True, request=request)
             except UserAlreadyExists:
                 # todo: don't raise this exception, note it in the response
@@ -131,13 +147,13 @@ def get_install_router(app: OSoarApp):
                 )
 
             # set as installed
-            crud.set_setting(db, "installed", "True")
+            crud.set_setting(db_conn, "installed", "True")
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="INSTALLATION_IS_ALREADY_COMPLETE",
             )
-        install_routes(app, get_db)
+        fastapi_users = install_routes(app, get_db)
         os.kill(1, signal.SIGHUP)
 
     @router.get("/install")
