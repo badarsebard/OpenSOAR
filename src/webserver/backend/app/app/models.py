@@ -1,5 +1,7 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.postgresql import UUID
+import uuid
+
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, JSON
+from sqlalchemy_utils import UUIDType
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -8,7 +10,7 @@ from .database import Base
 class UserTable(Base):
     __tablename__ = "user"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
+    id = Column(UUIDType(binary=False), primary_key=True, index=True, default=uuid.uuid4)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     display_name = Column(String)
@@ -26,7 +28,8 @@ class IncidentTable(Base):
     title = Column(String, index=True)
     status = Column(String, index=True)
     description = Column(String, index=True)
-    owner_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
+    owner_id = Column(UUIDType(binary=False), ForeignKey("user.id"))
+    data = Column(JSON)
 
     owner = relationship("UserTable", back_populates="incidents")
 
@@ -34,6 +37,6 @@ class IncidentTable(Base):
 class SettingsTable(Base):
     __tablename__ = "settings"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     setting = Column(String, index=True)
     value = Column(String, index=True)

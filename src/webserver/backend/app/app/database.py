@@ -14,7 +14,7 @@ def create_sessionmaker_engine():
     url = make_url(connection_string)
     if url.database is None:
         url = url.set(database="opensoar")
-    engine = create_engine(url.render_as_string())
+    engine = create_engine(url)
     if not database_exists(engine.url):
         create_database(engine.url)
 

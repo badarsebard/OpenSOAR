@@ -1,13 +1,24 @@
+# high level
+- case management
+- investigation
+- forensics
+- threat intel integration
+
 # soar components
 - ui for analysis (customizable)
     - dashboard for reviewing alerts
     - commandline for executing actions
         - with or without context of an alert
-    - war room for collaboration/workspace
+    - war room for collaboration/workspace 
+      - ?: is this actually needed, maybe just integrations with slack etc.
 - ~~script editor~~ git integration
 - workflows and editor
 - integrations
     - plugin framework?
+    - communication
+      - email
+      - slack
+      - etc
     - alert sources
     - api actions
 - incident/event management
@@ -16,7 +27,8 @@
 ## web app
 - svelte kit run on node
 - fastapi app for api
-- postgres database
+
+## external database and object storage
 
 ## indexed search?
 - elasticsearch probably
