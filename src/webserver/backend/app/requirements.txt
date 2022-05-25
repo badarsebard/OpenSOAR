@@ -1,8 +1,9 @@
 sqlalchemy==1.4.29
+sqlalchemy-utils==0.38.2
 psycopg2-binary==2.9.3
 fastapi-users[sqlalchemy2]==9.2.2
 # tenacity==8.0.1
-sse-starlette==0.10.0
+# sse-starlette==0.10.0
 # anyio==3.5.0
 # pydantic-sqlalchemy==0.0.9
 # git+https://github.com/argoproj/argo-workflows@master#subdirectory=sdks/python/client

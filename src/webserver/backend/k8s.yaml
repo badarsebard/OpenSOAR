@@ -34,14 +34,8 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: POSTGRES_PASSWORD
-              value: postgres123
-            - name: POSTGRES_USER
-              value: opensoar
-            - name: POSTGRES_HOST
-              value: 192.168.0.90
-            - name: POSTGRES_DB
-              value: opensoar
+            - name: CONNECTION_STRING
+              value: postgresql://opensoar:postgres123@192.168.0.90
             - name: AUTH_BACKEND_SECRET
               value: OpenSOAR@11042018
 ---

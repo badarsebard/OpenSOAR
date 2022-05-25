@@ -5,6 +5,11 @@
 
     let badInstall = false;
 
+    let password = "";
+    let confirmPassword = "";
+    let passwordMismatch;
+    $: passwordMismatch = password !== confirmPassword;
+
     if (browser) {
         fetch('/install/status', {
             method: 'GET',
@@ -22,9 +27,13 @@
     }
 
     async function install(event) {
+        if (passwordMismatch) {
+            return
+        }
         let jsonData = {};
         let data = new FormData(event.target);
         data.forEach((value, key) => jsonData[key] = value);
+        delete jsonData.confirmPassword
         const response = await fetch(`/api/install`, {
             method: 'POST',
             credentials: 'include',
@@ -60,9 +69,19 @@
                     <div class="field">
                         <label for="password" class="label">Password</label>
                         <div class="control">
-                            <input type="password" id="password" class="input" name="password"
+                            <input type="password" id="password" class="input" name="password" bind:value="{password}"
                                    required>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label for="confirmPassword" class="label">Confirm Password</label>
+                        <div class="control">
+                            <input type="password" id="confirmPassword" class="input" name="confirmPassword" bind:value="{confirmPassword}"
+                                   required>
+                        </div>
+                        {#if passwordMismatch}
+                            <p class="help is-danger block">Passwords do not match</p>
+                        {/if}
                     </div>
                     <div class="field">
                         <label for="display_name" class="label">Display Name</label>
