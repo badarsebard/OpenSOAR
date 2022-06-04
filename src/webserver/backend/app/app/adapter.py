@@ -2,8 +2,7 @@ from typing import Type, Optional, TypeVar
 from pydantic import UUID4
 from sqlalchemy.orm import Session
 from sqlalchemy.engine import Result
-from . import models
-from . import schemas
+from src.webserver.backend.app.app import models, schemas
 
 from fastapi_users.db.base import BaseUserDatabase
 

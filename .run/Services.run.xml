@@ -4,12 +4,7 @@
       <settings>
         <option name="composeProjectName" value="opensoar" />
         <option name="envFilePath" value="" />
-        <option name="secondarySourceFiles">
-          <list>
-            <option value="opt/postgres/docker-compose.yaml" />
-          </list>
-        </option>
-        <option name="sourceFilePath" value="opt/minio/docker-compose.yaml" />
+        <option name="sourceFilePath" value="opt/docker-compose.yaml" />
       </settings>
     </deployment>
     <method v="2" />

@@ -1,6 +1,8 @@
 """CRUD operations for incidents"""
 from sqlalchemy.orm import Session, joinedload
-from .. import models, schemas
+
+import models
+import schemas
 
 
 def get_incidents(

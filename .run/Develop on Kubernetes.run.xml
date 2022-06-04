@@ -3,8 +3,8 @@
     <option name="allowRunningInParallel" value="false" />
     <option name="buildEnvironment" value="Local" />
     <option name="cleanupDeployments" value="true" />
-    <option name="deployToCurrentContext" value="false" />
-    <option name="deployToMinikube" value="true" />
+    <option name="deployToCurrentContext" value="true" />
+    <option name="deployToMinikube" value="false" />
     <option name="envVariables" />
     <option name="imageRepositoryOverride" />
     <option name="kubernetesContext" />

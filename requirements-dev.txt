@@ -1,0 +1,5 @@
+sqlalchemy==1.4.36
+sqlalchemy-utils==0.38.2
+psycopg2-binary==2.9.3
+fastapi==0.78.0
+fief-client[fastapi]==0.11.0

@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta25
+apiVersion: skaffold/v2beta28
 kind: Config
 metadata:
   name: opensoar
@@ -17,9 +17,12 @@ deploy:
     hooks:
       before:
         - host:
-            command: ["sh", "-c", "kubectl apply -f src/argo/argo-ns.yaml --wait=true"]
+            command:
+              - sh
+              - -c
+              - kubectl apply -f src/argo/argo-ns.yaml --wait=true
     manifests:
+    - src/argo/argo.yaml
     - src/k8s.yaml
     - src/webserver/backend/k8s.yaml
     - src/webserver/frontend/k8s.yaml
-    - src/argo/argo.yaml

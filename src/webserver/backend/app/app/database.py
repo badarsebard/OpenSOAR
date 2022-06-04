@@ -1,4 +1,3 @@
-"""Creates connection to the database for use by the API"""
 import os
 
 from sqlalchemy import create_engine
@@ -9,8 +8,7 @@ from sqlalchemy_utils import database_exists, create_database
 
 
 def create_sessionmaker_engine():
-    """Creates the actual session and engine objects"""
-    connection_string = os.environ.get("CONNECTION_STRING")
+    connection_string = os.environ.get("DB_CONNECTION_STRING")
     url = make_url(connection_string)
     if url.database is None:
         url = url.set(database="opensoar")

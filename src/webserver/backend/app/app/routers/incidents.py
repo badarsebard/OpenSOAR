@@ -4,7 +4,8 @@ from typing import Dict, Union, List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from .. import schemas, crud
+from crud.incidents import get_incidents, create_incident
+import schemas
 
 
 def get_incidents_router(app):
@@ -31,7 +32,7 @@ def get_incidents_router(app):
         query_filter: str = None,
         db_conn: Session = Depends(get_db),
     ):
-        return crud.get_incidents(
+        return get_incidents(
             db_conn, skip=skip, limit=limit, query_filter=query_filter
         )
 
@@ -40,11 +41,11 @@ def get_incidents_router(app):
         response_model=schemas.Incident,
         # dependencies=[Depends(app.users.current_user(active=True))],
     )
-    def create_incident(
+    def create_new_incident(
         incident: schemas.IncidentCreate,
         db_conn: Session = Depends(get_db),
     ):
-        return crud.create_incident(db_conn, incident)
+        return create_incident(db_conn, incident)
 
     # @router.get("/incidents/stream")
     # async def read_incidents_from_stream(

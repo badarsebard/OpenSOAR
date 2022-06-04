@@ -1,6 +1,13 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM python:3.9
 
-COPY app/requirements.txt .
-RUN pip install -r requirements.txt
+WORKDIR /code
 
-COPY ./app /app
+COPY ./requirements.txt /code/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY ./app/app /code/app
+
+WORKDIR /code/app
+
+CMD ["hypercorn", "main:app", "--bind", "0.0.0.0:80"]

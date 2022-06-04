@@ -1,0 +1,54 @@
+services:
+  fief:
+    depends_on:
+      - db
+    image: ghcr.io/fief-dev/fief:0.14
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET=z8GC5TEYRejNXVl8__e8hV-TLHV-EjiFgrI67a5sGf9i-IoqIqLOtHi1nl-sJrq__1iYTxFKDts_vfDIKU-YSA
+      - FIEF_CLIENT_ID=bNu6NL55UdTPFyvv2zypuGRzNj7IAkw4OWLcBgb5sEI
+      - FIEF_CLIENT_SECRET=kNji8D-4pzDDYtWfyuUND0GhThSZvyICnQy6z6EuiA0
+      - ENCRYPTION_KEY=KwcWdX-xzlLk77dfLY0aJm55rCRwplZjYnMZmQ3Cmow=
+      - PORT=8000
+      - ROOT_DOMAIN=localhost:8000
+      - FIEF_DOMAIN=localhost:8000
+      - CSRF_COOKIE_SECURE=False
+      - LOGIN_SESSION_COOKIE_SECURE=False
+      - SESSION_COOKIE_SECURE=False
+      - FIEF_ADMIN_SESSION_COOKIE_SECURE=False
+      - DATABASE_TYPE=POSTGRESQL
+      - DATABASE_HOST=opensoar-db-1
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=opensoar
+      - DATABASE_PASSWORD=opensoar123
+      - DATABASE_NAME=opensoar
+
+  minio:
+    image: minio/minio:RELEASE.2022-05-26T05-48-41Z
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    volumes:
+      - "/data"
+
+  db:
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: opensoar
+      POSTGRES_PASSWORD: opensoar123
+      POSTGRES_DB: opensoar
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - 8080:8080
