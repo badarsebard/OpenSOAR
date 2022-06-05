@@ -1,7 +1,6 @@
 """Router for installation endpoints"""
 import os
 import signal
-import sys
 
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy import inspect
@@ -12,10 +11,6 @@ from crud.settings import get_setting, set_setting
 from utils import OSoarApp
 from database import Base
 from routers.incidents import get_incidents_router
-
-secret = os.environ.get("AUTH_BACKEND_SECRET")
-if not secret:
-    sys.exit(1)
 
 
 def install_routes(app: OSoarApp):
@@ -48,7 +43,7 @@ def get_install_router(app: OSoarApp):
             installed = get_setting(db_conn, "installed")
         if not installed or installed.value != "True":
             # create initial user
-            
+
             # set as installed
             set_setting(db_conn, "installed", "True")
         else:

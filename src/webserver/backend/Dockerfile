@@ -10,4 +10,4 @@ COPY ./app/app /code/app
 
 WORKDIR /code/app
 
-CMD ["hypercorn", "main:app", "--bind", "0.0.0.0:80"]
+CMD ["hypercorn", "--bind", "0.0.0.0:80", "main:app"]

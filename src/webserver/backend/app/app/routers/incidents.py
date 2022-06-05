@@ -32,9 +32,7 @@ def get_incidents_router(app):
         query_filter: str = None,
         db_conn: Session = Depends(get_db),
     ):
-        return get_incidents(
-            db_conn, skip=skip, limit=limit, query_filter=query_filter
-        )
+        return get_incidents(db_conn, skip=skip, limit=limit, query_filter=query_filter)
 
     @router.post(
         "/incidents",

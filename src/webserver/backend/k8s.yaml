@@ -35,7 +35,7 @@ spec:
             - containerPort: 80
           env:
             - name: DB_CONNECTION_STRING
-              value: postgresql://opensoar:postgres123@192.168.0.90
+              value: postgresql://opensoar:opensoar123@192.168.0.90
 #            - name: AUTH_BACKEND_SECRET
 #              value: OpenSOAR@11042018
 ---
